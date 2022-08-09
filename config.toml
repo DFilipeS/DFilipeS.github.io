@@ -1,0 +1,30 @@
+baseURL = 'https://d180-2001-818-ea82-ca00-75ec-5e1b-1c3c-dad1.eu.ngrok.io/'
+languageCode = 'en-us'
+title = 'Daniel Silva'
+theme = 'PaperMod'
+
+[params]
+ShowReadingTime = true
+ShowCodeCopyButtons = true
+
+[params.profileMode]
+enabled = true
+title = "Daniel Silva"
+subtitle = "Software engineer"
+imageUrl = "./me.jpeg"
+
+[[params.profileMode.buttons]]
+name = "Posts"
+url = "posts"
+
+[[params.socialIcons]]
+name = "twitter"
+url = "https://twitter.com/DFilipeS"
+
+[[params.socialIcons]]
+name = "linkedin"
+url = "https://www.linkedin.com/in/dfilipes/"
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/DFilipeS"
