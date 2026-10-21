@@ -65,8 +65,9 @@ test('shared design, local assets, metadata and footer remain intact', () => {
     for (const mode of ['light','dark','system']) assert.equal($(`input[name="theme"][value="${mode}"]`).length,1);
     assert.ok(html.indexOf('localStorage.getItem') < html.indexOf('href="/style.css"'));
     assert.equal($('script[src="/theme.js"]').length, 1);
-    assert.equal($('[rel="canonical"],[property="og:url"]').length, 0, 'No invented production domain');
-    assert.equal($('[name="robots"]').attr('content'), 'noindex, nofollow');
+    const pathname = path === 'dist/index.html' ? '/' : path.slice(4, -10);
+    assert.equal($('[rel="canonical"]').attr('href'), `https://www.dfilipes.dev${pathname}`);
+    assert.equal($('[name="robots"]').length, 0, 'Production pages must be indexable');
   }
   for (const p of ['style.css','theme.js']) assert.equal(read('dist/'+p),read('static/'+p));
   for (const m of read('dist/style.css').matchAll(/url\('([^']+)'\)/g)) assert.ok(existsSync('dist'+m[1]));
