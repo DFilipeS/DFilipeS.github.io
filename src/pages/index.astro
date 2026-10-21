@@ -1,0 +1,17 @@
+---
+import Site from '../layouts/Site.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('posts')).sort((a,b) => a.data.order - b.data.order);
+---
+<Site title="Writing & things" description="Daniel Silva, Staff Software Engineer at Coverflex. Writing about software, sharing talks, and figuring things out.">
+<section class="intro" aria-labelledby="intro-title">
+<p class="eyebrow">Software engineer. Occasionally writes.</p>
+<h1 id="intro-title">Daniel Silva, <em>with a few notes.</em></h1>
+<p>I’m a Staff Software Engineer at <a href="https://www.coverflex.com/">Coverflex</a>. I like building things, understanding how they work, and writing about what I learn along the way.</p>
+<p class="aside">This is where I keep my writing, talks, and things I’m figuring out. A little less scattered across the internet.</p>
+</section>
+<section id="writing" aria-labelledby="writing-title"><h2 class="section-label" id="writing-title">Writing</h2>
+<ul class="entries">{posts.map(post => <li class="entry"><span class:list={["year", { new: !post.data.date }]}>{post.data.label}</span><div><h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3><p>{post.data.description}</p></div></li>)}</ul></section>
+<section id="speaking" aria-labelledby="speaking-title"><h2 class="section-label" id="speaking-title">Speaking</h2>
+<ul class="entries"><li class="entry"><span class="year">2023</span><div><h3><a href="https://www.youtube.com/watch?v=p6z6Buy3YNg">Opening a Black Box: Observability in a Complex System</a></h3><p>ElixirConf EU · Structured logs, tracing, and understanding a growing system.</p><a class="watch" href="https://www.youtube.com/watch?v=p6z6Buy3YNg">Watch the talk ↗</a></div></li></ul></section>
+</Site>

@@ -1,0 +1,56 @@
+{
+  "embeds": [
+    {
+      "embed": "import function",
+      "source": "https://gist.github.com/DFilipeS/64eef78f9d42a92b373fd418ec23100a"
+    },
+    {
+      "embed": "get_page_html function",
+      "source": "https://gist.github.com/DFilipeS/45c032429be7e812f66db2593abcb6b2"
+    },
+    {
+      "embed": "get_dom_elements function",
+      "source": "https://gist.github.com/DFilipeS/329ce1684ab2dc367e0cdf677b7cac13"
+    },
+    {
+      "embed": "extract_metadata function",
+      "source": "https://gist.github.com/DFilipeS/a89f15e46c9a41e81a08d43e68d172fb"
+    },
+    {
+      "embed": "list of houses",
+      "source": "https://gist.github.com/DFilipeS/bb6c0d0745ced6bc8d536e34976b9cf6"
+    },
+    {
+      "embed": "config file",
+      "source": "https://gist.github.com/DFilipeS/fb4308a83ef3d8180327975f43def7c3"
+    },
+    {
+      "embed": "import_ads function",
+      "source": "https://gist.github.com/DFilipeS/7958db39203d542c55b3aef2731367ce"
+    },
+    {
+      "embed": "process_entries function",
+      "source": "https://gist.github.com/DFilipeS/d0145224d8805095e26c2d96655476b9"
+    },
+    {
+      "embed": "webhook function",
+      "source": "https://gist.github.com/DFilipeS/0823815bbbefc25d870c4d205fa5830a"
+    },
+    {
+      "embed": "incoming_message function",
+      "source": "https://gist.github.com/DFilipeS/e7689ec7c6e60ed65bf2f67f468a9ed3"
+    },
+    {
+      "embed": "notify_subscribers function",
+      "source": "https://gist.github.com/DFilipeS/1c139be1b04dc5a19edc78e7b68d7a99"
+    }
+  ],
+  "images": {
+    "https://media.giphy.com/media/l3q2Z6S6n38zjPswo/giphy.gif": "/images/f8cc7c75a0dc94b4.gif",
+    "https://miro.medium.com/v2/resize:fit:1000/0*A5sCi0wzhO5F32EF.": "/images/fc793b674440e911.jpg",
+    "https://miro.medium.com/v2/resize:fit:274/1*l1UFre8kCrvFj5_8JCqHrw.gif": "/images/64660d9ae20b8d7a.gif",
+    "https://miro.medium.com/v2/resize:fit:498/1*WgE8kTAJRYk_vOgbO1NMgw.gif": "/images/f79b42def7da8eb5.gif",
+    "https://substackcdn.com/image/fetch/$s_!noT_!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F79937ada-c4e6-414f-aa51-8698aece09c9_820x180.png": "/images/d54677d80e2ae393.png",
+    "https://substackcdn.com/image/fetch/$s_!xKK4!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3bf8a0f8-765e-4e4b-9388-59fc675b1095_3248x1982.png": "/images/88e31043b1cf1078.png"
+  }
+}

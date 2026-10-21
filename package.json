@@ -1,0 +1,18 @@
+{
+  "name": "daniel-silva-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.4",
+    "astro": "7.4.2"
+  },
+  "devDependencies": {
+    "cheerio": "1.2.0"
+  }
+}

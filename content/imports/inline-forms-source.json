@@ -1,0 +1,87 @@
+{
+  "title": "Creating an inline form on a table with Phoenix LiveView",
+  "times": [
+    {
+      "name": "article:published_time",
+      "content": "2022-08-05T23:08:59+01:00"
+    },
+    {
+      "name": "article:modified_time",
+      "content": "2022-08-05T23:08:59+01:00"
+    }
+  ],
+  "code": [
+    "mix phx.new example\n",
+    "mix phx.gen.context Accounting Movement movements date:date description:text amount:integer\n",
+    "mix ecto.reset\n",
+    "defmodule ExampleWeb.MovementsListLive do\n  use ExampleWeb, :live_view\n\n  alias Example.Accounting\n\n  @impl Phoenix.LiveView\n  def mount(_params, _session, socket) do\n    socket = assign(socket, :movements, Accounting.list_movements())\n\n    {:ok, socket}\n  end\n\n  @impl Phoenix.LiveView\n  def render(assigns) do\n    ~H\"\"\"\n    <div class=\"table w-full text-xs my-4\">\n      <div class=\"table-header-group\">\n        <div class=\"table-row\">\n          <div class=\"table-cell py-2 border-b text-left font-bold w-32\">Date</div>\n          <div class=\"table-cell py-2 border-b text-left font-bold\">Description</div>\n          <div class=\"table-cell py-2 border-b text-left font-bold w-32\">Amount</div>\n        </div>\n      </div>\n      <div class=\"table-row-group\">\n        <%= for movement <- @movements do %>\n          <div id={\"movement-#{movement.id}\"} class={\"movement movement-#{movement.id} table-row cursor-pointer\"}>\n            <div class=\"table-cell py-2 border-y\"><%= movement.date %></div>\n            <div class=\"table-cell py-2 border-y\"><%= movement.description %></div>\n            <div class=\"table-cell py-2 border-y\"><%= movement.amount %></div>\n          </div>\n        <% end %>\n      </div>\n    </div>\n    \"\"\"\n  end\nend\n",
+    "defmodule ExampleWeb.Router do\n  use ExampleWeb, :router\n\n  pipeline :browser do\n    plug :accepts, [\"html\"]\n    plug :fetch_session\n    plug :fetch_live_flash\n    plug :put_root_layout, {ExampleWeb.LayoutView, :root}\n    plug :protect_from_forgery\n    plug :put_secure_browser_headers\n  end\n  \n  scope \"/\", ExampleWeb do\n    pipe_through :browser\n\n    live \"/movements\", MovementsListLive, :index\n  end\n\n  ...\nend\n",
+    "defmodule ExampleWeb.MovementsList.FormComponent do\n  use ExampleWeb, :live_component\n\n  alias Example.Accounting\n  alias Example.Accounting.Movement\n\n  @impl Phoenix.LiveComponent\n  def update(assigns, socket) do\n    socket =\n      socket\n      |> assign(assigns)\n      |> assign(:changeset, Accounting.change_movement(assigns.movement))\n\n    {:ok, socket}\n  end\n\n  ...\nend\n",
+    "@impl Phoenix.LiveComponent\ndef handle_event(\"validate\", %{\"movement\" => params}, socket) do\n  changeset =\n      socket.assigns.movement\n      |> Accounting.change_movement(params)\n      |> Map.put(:action, :validate)\n\n  socket = assign(socket, :changeset, changeset)\n  {:noreply, socket}\nend\n",
+    "@impl Phoenix.LiveComponent\ndef handle_event(\"save\", %{\"movement\" => params}, socket) do\n  case socket.assigns.movement do\n    %Movement{id: nil} -> create_movement(socket, params)\n    %Movement{} -> update_movement(socket, params)\n  end\nend\n\ndefp create_movement(socket, params) do\n  case Accounting.create_movement(params) do\n    {:ok, movement} ->\n      socket = assign(socket, :changeset, Accounting.change_movement(%Movement{}))\n      {:noreply, socket}\n\n    {:error, changeset} ->\n      socket = assign(socket, :changeset, changeset)\n      {:noreply, socket}\n  end\nend\n\ndefp update_movement(socket, params) do\n  case Accounting.update_movement(socket.assigns.movement, params) do\n    {:ok, movement} ->\n      {:noreply, socket}\n\n    {:error, changeset} ->\n      socket = assign(socket, :changeset, changeset)\n      {:noreply, socket}\n  end\nend\n",
+    "@impl Phoenix.LiveComponent\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"contents\">\n    <.form let={f} for={@changeset} phx-target={@myself} phx-change=\"validate\" phx-submit=\"save\" as=\"movement\" class=\"contents\">\n      <div class={\"movement-form #{get_form_class(@movement)}\"}>\n        <div class=\"table-cell py-2 pr-1\">\n          <%= date_input f, :date, class: \"rounded w-full text-xs mb-1\" %>\n          <%= error_tag f, :date, class: \"text-xs text-red-500\" %>\n        </div>\n        <div class=\"table-cell py-2 px-1\">\n          <%= text_input f, :description, class: \"rounded w-full text-xs mb-1\" %>\n          <%= error_tag f, :description, class: \"text-xs text-red-500\" %>\n        </div>\n        <div class=\"table-cell py-2 pl-1\">\n          <%= number_input f, :amount, class: \"rounded w-full text-xs mb-1\" %>\n          <%= error_tag f, :amount, class: \"text-xs text-red-500\" %>\n        </div>\n      </div>\n      <div class={\"movement-form #{get_form_class(@movement)}\"}>\n        <div class=\"table-cell pb-2 border-b\"></div>\n        <div class=\"table-cell pb-2 border-b\"></div>\n        <div class=\"table-cell pb-2 border-b text-right\">\n          <button type=\"submit\" class=\"rounded px-2 py-1 bg-indigo-400 hover:bg-blue-600 text-white\">Save</button>\n        </div>\n      </div>\n    </.form>\n  </div>\n  \"\"\"\nend\n\ndefp get_form_class(%Movement{id: nil}), do: \"create-movement-form\"\ndefp get_form_class(%Movement{id: id}), do: \"movement-#{id}-form\"\n",
+    "@impl Phoenix.LiveView\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"table w-full text-xs my-4\">\n    <div class=\"table-header-group\">\n      <div class=\"table-row\">\n        <div class=\"table-cell py-2 border-b text-left font-bold w-32\">Date</div>\n        <div class=\"table-cell py-2 border-b text-left font-bold\">Description</div>\n        <div class=\"table-cell py-2 border-b text-left font-bold w-32\">Amount</div>\n      </div>\n    </div>\n    <div class=\"table-row-group\">\n      <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                       id=\"create-movement-form\"\n                       movement={%Movement{}} />\n      <%= for movement <- @movements do %>\n        <div id={\"movement-#{movement.id}\"} class={\"movement movement-#{movement.id} table-row cursor-pointer\"}>\n          <div class=\"table-cell py-2 border-y\"><%= movement.date %></div>\n          <div class=\"table-cell py-2 border-y\"><%= movement.description %></div>\n          <div class=\"table-cell py-2 border-y\"><%= movement.amount %></div>\n        </div>\n        <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                         id={\"movement-form-#{movement.id}\"}\n                         movement={movement} />\n      <% end %>\n    </div>\n  </div>\n  \"\"\"\nend\n",
+    "defp create_movement(socket, params) do\n  case Accounting.create_movement(params) do\n    {:ok, movement} ->\n      socket = assign(socket, :changeset, Accounting.change_movement(%Movement{}))\n      send(self(), {:movement_created, movement})\n      {:noreply, socket}\n\n    {:error, changeset} ->\n      socket = assign(socket, :changeset, changeset)\n      {:noreply, socket}\n  end\nend\n\ndefp update_movement(socket, params) do\n  case Accounting.update_movement(socket.assigns.movement, params) do\n    {:ok, movement} ->\n      send(self(), {:movement_updated, movement})\n      {:noreply, socket}\n\n    {:error, changeset} ->\n      socket = assign(socket, :changeset, changeset)\n      {:noreply, socket}\n  end\nend\n",
+    "@impl Phoenix.LiveView\ndef handle_info({:movement_created, movement}, socket) do\n  socket = assign(socket, :movements, Accounting.list_movements())\n\n  {:noreply, socket}\nend\n\n@impl Phoenix.LiveView\ndef handle_info({:movement_updated, movement}, socket) do\n  movements = \n    Enum.map(\n      socket.assigns.movements, \n      &if(&1.id == movement.id, do: movement, else: &1)\n    )\n\n  socket = assign(socket, :movements, movements)\n\n  {:noreply, socket}\nend\n",
+    "@impl Phoenix.LiveComponent\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"contents\">\n    <.form let={f} for={@changeset} phx-target={@myself} phx-change=\"validate\" phx-submit=\"save\" as=\"movement\" class=\"contents\">\n      <div class={\"movement-form #{get_form_class(@movement)} hidden\"}>\n        ...\n      </div>\n      <div class={\"movement-form #{get_form_class(@movement)} hidden\"}>\n        ...\n      </div>\n    </.form>\n  </div>\n  \"\"\"\nend\n",
+    "defp show_form(js \\\\ %JS{}, movement)\n\ndefp show_form(js, %Movement{id: nil}) do\n  js\n  |> JS.hide(to: \".movement-form\")                  # Hide any visible form\n  |> JS.show(to: \".movement\", display: \"table-row\") # Display any previously hidden table row\n  |> JS.show(                                       # Display create movement form\n    to: \".create-movement-form\",\n    display: \"table-row\",\n    transition: {\"ease-in duration-150\", \"opacity-0\", \"opacity-100\"},\n    time: 150\n  )\nend\n\ndefp show_form(js, movement) do\n  js\n  |> JS.hide(to: \".movement-form\")                  # Hide any visible form\n  |> JS.show(to: \".movement\", display: \"table-row\") # Display any previously hidden table row\n  |> JS.hide(to: \".movement-#{movement.id}\")        # Hide clicked table row\n  |> JS.show(                                       # Display update movement form\n    to: \".movement-#{movement.id}-form\",\n    display: \"table-row\",\n    transition: {\"ease-in duration-150\", \"opacity-0\", \"opacity-100\"},\n    time: 150\n  )\nend\n",
+    "@impl Phoenix.LiveView\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"my-4\">\n    <button type=\"button\"\n            phx-click={show_form(%Movement{})}\n            class=\"rounded px-3 py-2 bg-indigo-400 hover:bg-blue-600 text-white text-sm\">\n      Add new movement\n    </button>\n  </div>\n  <div class=\"table w-full text-xs my-4\">\n    <div class=\"table-header-group\">\n      ...\n    </div>\n    <div class=\"table-row-group\">\n      <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                       id=\"create-movement-form\"\n                       movement={%Movement{}} />\n      <%= for movement <- @movements do %>\n        <div id={\"movement-#{movement.id}\"}\n             class={\"movement movement-#{movement.id} table-row cursor-pointer\"}\n             phx-click={show_form(movement)}>\n          ...\n        </div>\n        <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                        id={\"movement-form-#{movement.id}\"}\n                        movement={movement} />\n      <% end %>\n    </div>\n  </div>\n  \"\"\"\nend\n",
+    "<div id=\"movement-11\" class=\"movement movement-11 table-row cursor-pointer\" phx-click=\"[[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;.movement-form&quot;,&quot;transition&quot;:[[],[],[]]}],[&quot;show&quot;,{&quot;display&quot;:&quot;table-row&quot;,&quot;time&quot;:200,&quot;to&quot;:&quot;.movement&quot;,&quot;transition&quot;:[[],[],[]]}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;.movement-11&quot;,&quot;transition&quot;:[[],[],[]]}],[&quot;show&quot;,{&quot;display&quot;:&quot;table-row&quot;,&quot;time&quot;:150,&quot;to&quot;:&quot;.movement-11-form&quot;,&quot;transition&quot;:[[&quot;ease-in&quot;,&quot;duration-150&quot;],[&quot;opacity-0&quot;],[&quot;opacity-100&quot;]]}]]\" style=\"display: table-row;\">\n  <div class=\"table-cell py-2 border-y\">2022-08-10</div>\n  <div class=\"table-cell py-2 border-y\">Test</div>\n  <div class=\"table-cell py-2 border-y\">1337</div>\n</div>\n",
+    "[[\"hide\",{\"time\":200,\"to\":\".movement-form\",\"transition\":[[],[],[]]}],[\"show\",{\"display\":\"table-row\",\"time\":200,\"to\":\".movement\",\"transition\":[[],[],[]]}],[\"hide\",{\"time\":200,\"to\":\".movement-11\",\"transition\":[[],[],[]]}],[\"show\",{\"display\":\"table-row\",\"time\":150,\"to\":\".movement-11-form\",\"transition\":[[\"ease-in\",\"duration-150\"],[\"opacity-0\"],[\"opacity-100\"]]}]]\n",
+    "defp hide_form(js \\\\ %JS{}, movement)\n\ndefp hide_form(js, %Movement{id: nil}) do\n  JS.hide(js, to: \".movement-form\") # Hide all forms in the page\nend\n\ndefp hide_form(js, movement) do\n  js\n  |> JS.hide(to: \".movement-form\")  # Hide all forms in the page\n  |> JS.show(                       # Display the previously hidden table row\n    to: \".movement-#{movement.id}\",\n    display: \"table-row\",\n    transition: {\"ease-in duration-150\", \"opacity-0\", \"opacity-100\"},\n    time: 150\n  )\nend\n",
+    "@impl Phoenix.LiveComponent\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"contents\">\n    <.form let={f} for={@changeset} phx-target={@myself} phx-change=\"validate\" phx-submit=\"save\" as=\"movement\" class=\"contents\">\n      <div class={\"movement-form #{get_form_class(@movement)} hidden\"}>\n        ...\n      </div>\n      <div class={\"movement-form #{get_form_class(@movement)} hidden\"}>\n        <div class=\"table-cell pb-2 border-b\"></div>\n        <div class=\"table-cell pb-2 border-b\"></div>\n        <div class=\"table-cell pb-2 border-b text-right\">\n          <button type=\"button\" phx-click={@on_cancel.()} class=\"px-2 py-1 mr-2\">Cancel</button>\n          <button type=\"submit\" class=\"rounded px-2 py-1 bg-indigo-400 hover:bg-blue-600 text-white\">Save</button>\n        </div>\n      </div>\n    </.form>\n  </div>\n  \"\"\"\nend\n",
+    "@impl Phoenix.LiveView\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"my-4\">\n    ...\n  </div>\n  <div class=\"table w-full text-xs my-4\">\n    <div class=\"table-header-group\">\n      ...\n    </div>\n    <div class=\"table-row-group\">\n      <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                       id=\"create-movement-form\"\n                       movement={%Movement{}}\n                       on_cancel={fn -> hide_form(%Movement{}) end} />\n      <%= for movement <- @movements do %>\n        <div id={\"movement-#{movement.id}\"}\n             class={\"movement movement-#{movement.id} table-row cursor-pointer\"}\n             phx-click={show_form(movement)}>\n          ...\n        </div>\n        <.live_component module={ExampleWeb.MovementsList.FormComponent}\n                        id={\"movement-form-#{movement.id}\"}\n                        movement={movement}\n                        on_cancel={fn -> hide_form(movement) end} />\n      <% end %>\n    </div>\n  </div>\n  \"\"\"\nend\n",
+    "@impl Phoenix.LiveView\ndef render(assigns) do\n  ~H\"\"\"\n  <div class=\"my-4\">\n    ...\n  </div>\n  <div class=\"table w-full text-xs my-4\">\n    <div class=\"table-header-group\">\n      ...\n    </div>\n    <div class=\"table-row-group\">\n      ...\n      <%= for movement <- @movements do %>\n        <div id={\"movement-#{movement.id}\"}\n             class={\"movement movement-#{movement.id} table-row cursor-pointer\"}\n             phx-click={show_form(movement)}\n             data-hide-form={hide_form(@movement)}>\n          ...\n        </div>\n        ...\n      <% end %>\n    </div>\n  </div>\n  \"\"\"\nend\n",
+    "@impl Phoenix.LiveView\ndef handle_info({:movement_created, movement}, socket) do\n  socket =\n    socket\n    ...\n    |> push_event(\"js-exec\", %{\n      to: \".movement-#{movement.id}\",\n      attr: \"data-hide-form\"\n    })\n\n  {:noreply, socket}\nend\n\n@impl Phoenix.LiveView\ndef handle_info({:movement_updated, movement}, socket) do\n  ...\n\n  socket =\n    socket\n    ...\n    |> push_event(\"js-exec\", %{\n      to: \".movement-#{movement.id}\",\n      attr: \"data-hide-form\"\n    })\n\n  {:noreply, socket}\nend\n",
+    "window.addEventListener(\"phx:js-exec\", ({ detail }) => {\n    document.querySelectorAll(detail.to).forEach(el => {\n        liveSocket.execJS(el, el.getAttribute(detail.attr))\n    })\n})\n"
+  ],
+  "images": [
+    {
+      "url": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/final-product.gif#center",
+      "alt": "The final product"
+    },
+    {
+      "url": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/movements-table.png#center",
+      "alt": "Movements list table"
+    },
+    {
+      "url": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/forms.png#center",
+      "alt": "Movements list forms"
+    }
+  ],
+  "headings": [
+    {
+      "level": "H1",
+      "text": "The problem"
+    },
+    {
+      "level": "H1",
+      "text": "The solution"
+    },
+    {
+      "level": "H1",
+      "text": "Step 0 - The Phoenix project and the necessary boilerplate"
+    },
+    {
+      "level": "H1",
+      "text": "Step 1 - The movements list table"
+    },
+    {
+      "level": "H1",
+      "text": "Step 2 - The movement form"
+    },
+    {
+      "level": "H1",
+      "text": "Step 3 - Adding the form to the movements list table"
+    },
+    {
+      "level": "H1",
+      "text": "Step 4 - Showing and hiding elements with Phoenix.LiveView.JS"
+    },
+    {
+      "level": "H1",
+      "text": "Wrapping up"
+    }
+  ],
+  "frames": []
+}

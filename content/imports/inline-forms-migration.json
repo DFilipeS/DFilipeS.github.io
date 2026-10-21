@@ -1,0 +1,25 @@
+{
+  "original": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/",
+  "date": "2022-08-05",
+  "code_blocks": 23,
+  "images": [
+    {
+      "original": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/final-product.gif#center",
+      "local": "/images/liveview-5f3f785fd454.gif",
+      "alt": "The final product",
+      "bytes": 335903
+    },
+    {
+      "original": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/movements-table.png#center",
+      "local": "/images/liveview-343af2b9757d.png",
+      "alt": "Movements list table",
+      "bytes": 173341
+    },
+    {
+      "original": "https://www.dfilipes.dev/posts/inline-forms-with-phoenix-live-view/forms.png#center",
+      "local": "/images/liveview-68cb247cea78.png",
+      "alt": "Movements list forms",
+      "bytes": 394250
+    }
+  ]
+}
