@@ -3,6 +3,19 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { load } from 'cheerio';
 
+test('arrow-marked links open a new tab securely', () => {
+  const pages = ['dist/index.html', ...readdirSync('dist/posts').map(slug => `dist/posts/${slug}/index.html`)];
+  for (const page of pages) {
+    const $ = load(readFileSync(page, 'utf8'));
+    const links = $('a').filter((_, link) => $(link).text().includes('↗'));
+    assert.ok(links.length >= 3, `${page}: expected social links`);
+    links.each((_, link) => {
+      assert.equal($(link).attr('target'), '_blank', $(link).text());
+      assert.ok(($(link).attr('rel') || '').split(/\s+/).includes('noopener'));
+    });
+  }
+});
+
 test('linked article images have an accessible name', () => {
   for (const slug of readdirSync('dist/posts')) {
     const $ = load(readFileSync(`dist/posts/${slug}/index.html`, 'utf8'));
