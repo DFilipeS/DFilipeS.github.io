@@ -36,8 +36,13 @@ test('all generated articles preserve text, code, images, dates, captions and vi
     if (slug === 'how-software-engineering-is-changing') {
       assert.match(read(`content/posts/${slug}.md`), /^date: '2026-10-22'$/m);
     }
-    assert.equal($('.article-note').text(), old('.article-note').text());
-    assert.equal($('.article-note a').attr('href'), old('.article-note a').attr('href'));
+    if (slug === 'how-software-engineering-is-changing') {
+      assert.equal($('.article-note').text(), 'This essay was originally written for the essay challenge from Pragmatic Engineer.');
+      assert.equal($('.article-note a').attr('href'), 'https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/');
+    } else {
+      assert.equal($('.article-note').text(), old('.article-note').text());
+      assert.equal($('.article-note a').attr('href'), old('.article-note a').attr('href'));
+    }
     const prose = $('.prose').clone(); prose.find('.article-end').remove();
     const oldProse = old('.prose').clone(); oldProse.find('.article-end').remove();
     assert.equal(norm(prose.text()), norm(oldProse.text()), `${slug} full prose`);
