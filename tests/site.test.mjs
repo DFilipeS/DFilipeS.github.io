@@ -37,7 +37,7 @@ test('all generated articles preserve text, code, images, dates, captions and vi
       assert.match(read(`content/posts/${slug}.md`), /^date: '2026-10-22'$/m);
     }
     if (slug === 'how-software-engineering-is-changing') {
-      assert.equal($('.article-note').text(), 'This essay was originally written for the essay challenge from Pragmatic Engineer.');
+      assert.equal($('.article-note').text(), 'This essay was originally written for the essay challenge from The Pragmatic Engineer.');
       assert.equal($('.article-note a').attr('href'), 'https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/');
     } else {
       assert.equal($('.article-note').text(), old('.article-note').text());
