@@ -39,6 +39,8 @@ test('all generated articles preserve text, code, images, dates, captions and vi
     if (slug === 'how-software-engineering-is-changing') {
       assert.equal($('.article-note').text(), 'Originally written for the essay challenge from The Pragmatic Engineer.');
       assert.equal($('.article-note a').attr('href'), 'https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/');
+      assert.equal($('.article-note a').attr('target'), '_blank');
+      assert.ok(($('.article-note a').attr('rel') || '').split(/\s+/).includes('noopener'));
     } else {
       assert.equal($('.article-note').text(), old('.article-note').text());
       assert.equal($('.article-note a').attr('href'), old('.article-note a').attr('href'));
