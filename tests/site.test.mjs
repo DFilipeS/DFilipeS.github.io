@@ -59,7 +59,8 @@ test('shared design, local assets, metadata and footer remain intact', () => {
   for (const slug of Object.keys(baseline)) assert.equal(home(`a[href="/posts/${slug}/"]`).length, 1);
   for (const path of ['dist/index.html', ...Object.keys(baseline).map(s => `dist/posts/${s}/index.html`)]) {
     const html = read(path), $ = load(html);
-    assert.deepEqual($('.main-nav a').map((_,e)=>$(e).text()).get(), ['Writing','Speaking']);
+    assert.equal($('.site-header nav').length, 0);
+    assert.equal($('.site-header .brand').attr('href'), '/');
     assert.deepEqual($('.social-links a').map((_,e)=>$(e).attr('href')).get(), ['https://github.com/DFilipeS','https://x.com/DFilipeS','https://www.linkedin.com/in/dfilipes']);
     assert.equal($('.theme-icon').length, 3);
     for (const mode of ['light','dark','system']) assert.equal($(`input[name="theme"][value="${mode}"]`).length,1);
