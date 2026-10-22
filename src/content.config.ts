@@ -10,6 +10,8 @@ const posts = defineCollection({
     label: z.string(),
     original: z.string().url().nullable(),
     platform: z.string().nullable(),
+    writtenFor: z.string().url().optional(),
+    writtenForName: z.string().optional(),
     order: z.number().int(),
   }),
 });
