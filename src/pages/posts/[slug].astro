@@ -18,7 +18,7 @@ for (const heading of headings) {
 <Site title={title} description={description} article>
 <article>
 <header class="article-header"><a class="back" href="/#writing">← All writing</a><div class="meta">{date ? <time datetime={date}>{formattedDate}</time> : <span>New essay · publication date not yet set</span>}</div><h1>{title}</h1>{original && <p class="article-note">Originally published on <a href={original}>{platform}</a>. This is the original article; tools and services may have changed since publication.</p>}
-{writtenFor && <p class="article-note">Originally written for the <a href={writtenFor}>essay challenge from {writtenForName}</a>.</p>}</header>
+{writtenFor && <p class="article-note">Originally written for the <a href={writtenFor} target="_blank" rel="noopener noreferrer">essay challenge from {writtenForName}</a>.</p>}</header>
 <div class="article-layout">
 <nav class="article-toc" aria-label="Table of contents"><h2 class="toc-title">Contents</h2><div class="toc"><ul>{sections.map(heading => <li><a href={`#${heading.slug}`}>{heading.text}</a>{heading.children.length > 0 && <ul>{heading.children.map(child => <li><a href={`#${child.slug}`}>{child.text}</a></li>)}</ul>}</li>)}</ul></div></nav>
 <div class="prose"><Content /><div class="article-end"><a href="/#writing">← Back to writing</a><a href="#main">Back to top ↑</a></div></div>
