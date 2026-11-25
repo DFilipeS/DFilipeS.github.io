@@ -7,6 +7,8 @@ original: null
 platform: dfilipes.dev
 writtenFor: https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/
 writtenForName: The Pragmatic Engineer
+featuredIn: https://newsletter.pragmaticengineer.com/i/226374821/how-ai-changes-software-engineering
+featuredAs: runner-up in the Reflections on AI category
 order: 0
 ---
 *The Times They Are a-Changin’* indeed. Software engineering has changed drastically in the last few years, for better or for worse we are still yet to see. I am lucky enough to have been in a startup since the very first lines of code were written, and I am also lucky enough to see first-hand the changes that AI tools brought to our day-to-day work. In both cases, it is fascinating to see something evolve right in front of your eyes. It gives you perspective on how things (companies and people) move through time, and how every decision leads to something interesting in the future. The company we were and how we worked in 2020, when we just started, is a completely different thing from what it is today in 2026.

@@ -37,10 +37,16 @@ test('all generated articles preserve text, code, images, dates, captions and vi
       assert.match(read(`content/posts/${slug}.md`), /^date: '2026-10-22'$/m);
     }
     if (slug === 'how-software-engineering-is-changing') {
-      assert.equal($('.article-note').text(), 'Originally written for the essay challenge from The Pragmatic Engineer.');
-      assert.equal($('.article-note a').attr('href'), 'https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/');
-      assert.equal($('.article-note a').attr('target'), '_blank');
-      assert.ok(($('.article-note a').attr('rel') || '').split(/\s+/).includes('noopener'));
+      assert.equal($('.article-note').length, 1);
+      assert.equal($('.article-note').text(), 'Originally written for The Pragmatic Engineer’s essay challenge. It was selected as a runner-up in the Reflections on AI category.');
+      const links = $('.article-note a');
+      assert.equal(links.length, 2);
+      assert.equal(links.eq(0).attr('href'), 'https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/');
+      assert.equal(links.eq(1).attr('href'), 'https://newsletter.pragmaticengineer.com/i/226374821/how-ai-changes-software-engineering');
+      links.each((_, link) => {
+        assert.equal($(link).attr('target'), '_blank');
+        assert.ok(($(link).attr('rel') || '').split(/\s+/).includes('noopener'));
+      });
     } else {
       assert.equal($('.article-note').text(), old('.article-note').text());
       assert.equal($('.article-note a').attr('href'), old('.article-note a').attr('href'));
