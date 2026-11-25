@@ -68,6 +68,7 @@ h1{font-size:52px;letter-spacing:-.035em;margin:0 0 22px}
 .article-header h1{font-size:52px;line-height:1.1;margin-top:15px;margin-bottom:23px;letter-spacing:-.035em}
 .meta{color:var(--muted);display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 .article-note{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding-block:14px;color:var(--muted);margin-block:22px}
+.article-note-icon{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:2px;border-radius:3px}
 .article-layout{display:grid;grid-template-columns:minmax(0,680px) minmax(0,230px);grid-template-areas:'body contents';gap:56px;align-items:start}
 .prose{grid-area:body;min-width:0;max-width:680px;font-family:var(--text);font-size:18px;line-height:1.6;overflow-wrap:break-word}
 .prose p{margin:0 0 1.1em}

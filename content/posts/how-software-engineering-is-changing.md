@@ -7,6 +7,7 @@ original: null
 platform: dfilipes.dev
 writtenFor: https://blog.pragmaticengineer.com/how-software-engineering-is-changing-an-essay-challenge/
 writtenForName: The Pragmatic Engineer
+writtenForIcon: /images/pragmatic-engineer.png
 featuredIn: https://newsletter.pragmaticengineer.com/i/226374821/how-ai-changes-software-engineering
 featuredAs: runner-up in the Reflections on AI category
 order: 0

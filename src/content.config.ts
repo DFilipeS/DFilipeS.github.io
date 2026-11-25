@@ -12,6 +12,7 @@ const posts = defineCollection({
     platform: z.string().nullable(),
     writtenFor: z.string().url().optional(),
     writtenForName: z.string().optional(),
+    writtenForIcon: z.string().optional(),
     featuredIn: z.string().url().optional(),
     featuredAs: z.string().optional(),
     order: z.number().int(),
